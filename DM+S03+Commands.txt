@@ -1,0 +1,231 @@
+# Creating and Using Containers Like a Boss
+
+## Check Our Docker Install and Config
+
+docker version   --  Gives us the version of docker we are using
+
+docker info  -- More information on docker we are using
+
+docker -- Gives us all possible commands on docker
+
+docker container run <container-name> -- New command to run a Container
+
+docker run <container-name>  -- Older command to run a Container
+
+## Starting a Nginx Web Server
+
+docker container run --publish 80:80 nginx -- running container nginx, with publish we specify traffic route on localhost(80):processes running at port 80 on container
+
+docker container run --publish 80:80 --detach nginx -- Run the container in the background
+
+docker container ls -- List all the running containers
+
+docker container stop 690 -- Stop a particular running container with process ID starting 3 letters
+
+docker container ls
+
+docker container ls -a  -- List all the containers(Currently running as well as stopped)
+
+docker container run --publish 80:80 --detach --name webhost nginx -- Specify the name of the container
+
+docker container ls -a
+
+docker container logs webhost -- List out the logs of a conatiner by its Management
+
+docker container top
+
+docker container top webhost  -- List out the processes running inside a specific container
+
+docker container --help
+
+docker container ls -a
+
+docker container rm 63f 690 ode -- Remove the containers from the records(That we ran already)
+
+docker container ls
+
+docker container rm -f 63f -- Force remove of containers from the records(Even the ones presently running)
+
+docker container ls -a
+
+## Container VS. VM: It's Just a Process
+
+docker run --name mongo -d mongo  -- Run a mongo db container with name mongo
+
+docker ps -- list the running Containers
+
+docker top mongo
+
+docker stop mongo
+
+docker ps
+
+docker top mongo
+
+docker start mongo
+
+docker ps
+
+docker top mongo
+
+## Assignment Answers: Manage Multiple Containers
+
+docker container run -d -p 3306:3306 --name db -e MYSQL_RANDOM_ROOT_PASSWORD=yes MYSQL_RANDOM_ROOT_PASSWORD
+
+docker container logs db -- Checking the logs for the random password set
+
+docker container run -d --name webserver -p 8080:80 httpd
+
+docker ps
+
+docker container run -d --name proxy -p 80:80 nginx
+
+docker ps
+
+docker container ls -- lists all the running containers
+
+docker container stop TAB COMPLETION -- will stop the running containers
+
+docker ps -a -- all the non-running and running containers
+
+docker container ls -a  -- all the non-running and running containers
+
+docker container rm  -- Remove the non-running container as well
+
+docker ps -a -- all the non-running and running containers
+
+docker image ls -- list of all images
+
+## What's Going On In Containers: CLI Process Monitoring
+
+docker container run -d --name nginx nginx
+
+docker container run -d --name mysql -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql
+
+docker container ls
+
+docker container top mysql  --  list the processes in this container
+
+docker container top nginx
+
+docker container inspect mysql  -- Inspect more details in a json file about the conatiner
+
+docker container stats --help
+
+docker container stats  -- Give stats about each container like how much memory and cpu usage
+
+docker container ls
+
+## Getting a Shell Inside Containers: No Need for SSH
+
+docker container run -help
+
+docker container run -it --name proxy nginx bash -- "-it" means interactive tty session, so this command open interactive session with the container and "bash" at the end opens the bash terminal
+
+docker container ls
+
+docker container ls -a
+
+docker container run -it --name ubuntu ubuntu -- "bash" command at the end is not needed as for ubuntu bash is the default
+
+docker container ls
+
+docker container ls -a
+
+docker container start --help
+
+docker container start -ai ubuntu -- Start a ubuntu container where it was previously stopped and same state is maintained(it will not be a new container, all the installs will remain)
+
+docker container exec --help
+
+docker container exec -it mysql bash -- Open an interactive session for already running Container
+
+docker container ls
+
+docker pull alpine -- Pull alpine image from dockerhub
+
+docker image ls -- List all the images locally available
+
+docker container run -it alpine bash
+
+docker container run -it alpine sh
+
+## Docker Networks: Concepts for Private and Public Comms in Containers
+
+docker container run -p 80:80 --name webhost -d nginx
+
+docker container port webhost -- See the opening ports in container and in local host for this container
+
+docker container inspect --format '{{ .NetworkSettings.IPAddress }}' webhost -- Search the for IPAddress in inspect using format command or use grep
+
+## Docker Networks: CLI Management of Virtual Networks
+
+docker network ls  -- List down all the networks available (by default bridge, host, null)
+
+docker network inspect bridge -- Get the details of the network like what containers are using it
+
+docker network ls
+
+docker network create my_app_net  -- Create a new network with default bridge network settings
+
+docker network ls
+
+docker network create --help
+
+docker container run -d --name new_nginx --network my_app_net nginx -- Assign and run a new container to an existing network
+
+docker network inspect my_app_net
+
+docker network --help
+
+docker network connect <network> <container>  -- Connect a network and a conatiner
+
+docker container inspect TAB COMPLETION
+
+docker container disconnect TAB COMPLETION -- Disconnect the network and a container
+
+docker container inspect
+
+## Docker Networks: DNS and How Containers Find Each Other
+
+docker container ls
+
+docker network inspect TAB COMPLETION
+
+docker container run -d --name my_nginx --network my_app_net nginx  -- Run a new container attaching a network already present
+
+docker container inspect TAB COMPLETION
+
+docker container exec -it my_nginx ping new_nginx -- Both the containers are associated with a network and the DNS link between them happens automatically and this ping works. (In default bridge network we need to use link command to connect different conatiners)
+
+docker container exec -it new_nginx ping my_nginx
+
+docker network ls
+
+docker container create --help
+
+## Assignment Answers: Using Containers for CLI Testing
+
+docker container run --rm -it centos:7 bash  -- Run container centos but using "--rm" same time removes the stopped container and does the cleaning after stopping it
+
+docker ps -a -- After exiting we don't see above container as we used "--rm" command
+
+docker container run --rm -it ubuntu:14.04 bash
+
+docker ps -a
+
+## Assignment Answers: DNS Round Robin Testing
+
+docker network create dude  -- Create a new network by name "dude"
+
+docker container run -d --net dude --net-alias search elasticsearch:2 -- Run this command twice to run two elasticsearch engines
+
+docker container ls
+
+docker container run --rm -- net dude alpine nslookup search  -- Run this container
+
+docker container run --rm --net dude centos curl -s search:9200 -- After running this container we would be getting respond from two elasticsearch engines randomly one after the other(and this is DNS roundrobin)
+
+docker container ls
+
+docker container rm -f TAB COMPLETION

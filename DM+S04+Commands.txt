@@ -1,0 +1,129 @@
+# Container Images, Where To Find Them and How To Build Them
+
+## The Mighty Hub: Using Docker Hub Registry Images
+
+http://hub.docker.com
+
+docker image ls  -- List down all docker images downloaded locally
+
+docker pull nginx  -- By default pulls the latest image
+
+docker pull nginx:1.11.9  -- Specify the version of the image that we need
+
+docker pull nginx:1.11
+
+docker pull nginx:1.11.9-alpine
+
+docker image ls
+
+## Images and Their Layers: Discover the Image Cache
+
+docker image ls
+
+docker history nginx:latest  -- History of different layers to build this image
+
+docker history mysql
+
+docker image inspect nginx  -- Get details of every thing in an image
+
+## Image Tagging and Pushing to Docker Hub
+
+docker image tag -- help -- Use 2 arguments original tag and then new tag we want
+
+docker image ls -- List down all images present
+
+docker pull mysql/mysql-server -- Pull a different sql image and even this is stored locally
+
+docker image ls
+
+docker pull nginx:mainline -- pull a container with mainline as tag
+
+docker image ls
+
+docker image tag nginx anikur1993/nginx -- Create a new tag to push to dockerhub. Same nginx layer is used and extra space is needed
+
+docker image tag --help
+
+docker image ls -- My new container with userid/nginx tage is created with same ID as nginx
+
+docker image push anikur1993/nginx -- Push the image to dockerhub
+
+docker --help
+
+docker login -- Login to dockerhub from terminal
+
+cat .docker/config.json -- Use the auth key for login purpose(present in this file)
+
+docker image push anikur1993/nginx
+
+docker image tag bretfisher/nginx bretfisher/nginx:testing -- Tag and create a new tag as testing from same old tag
+
+docker image ls --  we can see the new added tag(testing) in here along with previous one
+
+docker image push bretfisher/nginx:testing -- We push this new tag with that image and in dockerhub we can see new tag called testing
+
+docker image ls -- List down all docker images locally
+
+## Building Images: The Dockerfile Basics
+
+cd dockerfile-sample-1  -- Doenloading a dockerfile
+
+vim Dockerfile  -- Inspect subparts in the file(FROM, ENV, RUN, EXPOSE, CMD)
+
+## Building Images: Running Docker Builds
+
+docker image build -t customnginx .
+
+docker image ls
+
+docker image build -t customnginx .
+
+## Building Images: Extending Official Images
+
+cd dockerfile-sample-2
+
+vim Dockerfile
+
+docker container run -p 80:80 --rm nginx
+
+docker image build -t nginx-with-html .
+
+docker container run -p 80:80 --rm nginx-with-html
+
+docker image ls
+
+docker image tag --help
+
+docker image tag nginx-with-html:latest bretfisher/nginx-with-html:latest
+
+docker image ls
+
+docker push
+
+## Assignment Answers: Build Your Own Dockerfile and Run Containers From It
+
+cd dockerfile-assignment-1
+
+vim Dockerfile
+
+docker build cmd
+
+docker build -t testnode .
+
+docker container run --rm -p 80:3000 testnode
+
+docker images
+
+docker tag --help
+
+docker tag testnode bretfisher/testing-node
+
+docker push --help
+
+docker push bretfisher/testing-node
+
+docker image ls
+
+docker image rm bretfisher/testing-node
+
+docker container run --rm -p 80:3000 bretfisher/testing-node
