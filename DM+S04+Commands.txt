@@ -66,27 +66,27 @@ docker image ls -- List down all docker images locally
 
 ## Building Images: The Dockerfile Basics
 
-cd dockerfile-sample-1  -- Doenloading a dockerfile
+cd dockerfile-sample-1  -- Downloading a dockerfile
 
 vim Dockerfile  -- Inspect subparts in the file(FROM, ENV, RUN, EXPOSE, CMD)
 
 ## Building Images: Running Docker Builds
 
-docker image build -t customnginx .
+docker image build -t customnginx .  -- Go to the folder where "Dockerfile" is present and then have this cmd, where -t gives tag name to image and . at the end tells the cmd to use the file present in the folder
 
-docker image ls
+docker image ls  -- U can see new created image in here
 
-docker image build -t customnginx .
+docker image build -t customnginx . -- Making some change to Dockerfile and then re-running uses cache until that changed line and then runs below lines (And so more changing code at the end and less changing at the top)
 
 ## Building Images: Extending Official Images
 
 cd dockerfile-sample-2
 
-vim Dockerfile
+vim Dockerfile  -- check this file, we use copy cmd to copy file from local to docker image
 
 docker container run -p 80:80 --rm nginx
 
-docker image build -t nginx-with-html .
+docker image build -t nginx-with-html .  -- builing an image using existing official and a new html file in the folder
 
 docker container run -p 80:80 --rm nginx-with-html
 
@@ -94,11 +94,11 @@ docker image ls
 
 docker image tag --help
 
-docker image tag nginx-with-html:latest bretfisher/nginx-with-html:latest
+docker image tag nginx-with-html:latest anikur1993/nginx-with-html:latest -- Giving the tag to the custom created image
 
 docker image ls
 
-docker push
+docker push -- Pushing the image to the dockerhub
 
 ## Assignment Answers: Build Your Own Dockerfile and Run Containers From It
 
